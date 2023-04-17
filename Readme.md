@@ -61,3 +61,49 @@
         - morgan helping with developing with endpoints
         - @sandgrid/main send email
   ```
+
+### routes folder added in Server
+
+    ```
+    auth.js code
+        const express = require("express");
+    const router = express.Router();
+
+    router.get("/signup", (req, res) => {
+    res.json({
+        data: "you hit signup endpoint",
+    });
+    });
+
+    module.exports = router;
+
+    server.js added
+
+    // import routes
+    const authRoutes = require("./routes/auth.js");
+    // middleware
+    app.use("/api", authRoutes);
+
+    ```
+
+### controller folder added in Server
+
+    ```
+    in controller
+    auth.js code
+
+    exports.signup = (req, res) => {
+    res.json({
+        data: "you hit signup endpoint",
+    });
+    };
+
+    in router
+    auth.js code
+
+    // import controller
+    const { signup } = require("../controllers/auth.js");
+
+    router.get("/signup", signup);
+
+    ```
