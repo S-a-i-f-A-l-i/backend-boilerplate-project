@@ -187,3 +187,25 @@
 
     module.exports = mongoose.model("User", userSchema);
     ```
+
+### mongoDB Atlas URL added
+
+    ```
+    server.js code
+
+      mongoose
+    .connect(
+      process.env.DATABASE
+
+      // due to new version no need to add these things
+      // ,{
+      //   useNewUrlParser: true,
+      //   useFindAndModify: false,
+      //   useUnifiedTopology: true,
+      //   useCreateIndex: true,
+      // }
+    )
+    .then(() => console.log("DB connected"))
+    .catch((err) => console.log("DB error", err));
+
+    ```

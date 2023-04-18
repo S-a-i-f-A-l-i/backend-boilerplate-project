@@ -7,6 +7,12 @@ require("dotenv").config();
 
 const app = express();
 
+// connect to MongoDB Cloud
+mongoose
+  .connect(process.env.DATABASE)
+  .then(() => console.log("DB connected"))
+  .catch((err) => console.log("DB error", err));
+
 // import routes
 const authRoutes = require("./routes/auth.js");
 
