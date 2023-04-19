@@ -197,7 +197,7 @@
     .connect(
       process.env.DATABASE
 
-      // due to new version no need to add these things
+      // due to new version no need to add code for mongoose deprecationwarning 👇👇
       // ,{
       //   useNewUrlParser: true,
       //   useFindAndModify: false,
@@ -209,3 +209,42 @@
     .catch((err) => console.log("DB error", err));
 
     ```
+
+### validators folder added in Server
+
+```
+- validators/auth.js code
+
+const { check } = require("express-validator");
+exports.userSignupValidator = [
+  check("name").not().isEmpty().withMessage("Name is required"),
+  check("email").isEmail().withMessage("Must be a valid email address"),
+  check("password")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters"),
+];
+
+- validators/index.js code
+
+const { validationResult } = require("express-validator");
+exports.runValidation = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      error: errors.array()[0].msg,
+    });
+  }
+  next();
+};
+
+- import validators in routes/auth.js and applied
+
+// import validators
+const { userSignupValidator } = require("../validators/auth.js");
+const { runValidation } = require("../validators/index.js");
+
+router.post("/signup", userSignupValidator, runValidation, signup);
+
+
+```
