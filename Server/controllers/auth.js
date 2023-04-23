@@ -57,7 +57,9 @@ exports.signup = (req, res) => {
       //   `,
       // };
       // sgMail.send(emailData).then(sent=>{
-      // return res.json({`Email has been sent to {$email}. Follow the instruction to activate your account`})
+      // return res.json({`Email has been sent to ${email}. Follow the instruction to activate your account`})
+      // }).catch((err)=>{
+      //   console.log(err);
       // })
       new siMail.TransactionalEmailsApi()
         .sendTransacEmail({
