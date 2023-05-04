@@ -387,3 +387,66 @@ controllers auth.js code
     });
 
 ```
+
+### Signup account activation
+
+```
+
+  routes
+  auth.js code
+  router.post("/account-activation", accountActivation);
+
+  controllers
+  auth.js code
+
+  exports.accountActivation = (req, res) => {
+      const { token } = req.body;
+      console.log(token);
+      if (token) {
+        jwt.verify(
+          token,
+          process.env.JWT_ACCOUNT_ACTIVATION,
+          function (err, decoded) {
+            if (err) {
+              console.log("JWT Verify in Account Activation Error", err);
+              return res.status(401).json({
+                error: "Expired link. Signup again",
+              });
+            }
+            const { name, email, password } = jwt.decode(token);
+            let newUser = new User({ name, email, password });
+            // save callback function no longer accepted
+            // newUser.save((err, success) => {
+            //     if (err) {
+            //         console.log('SIGNUP ERROR', err);
+            //         return res.status(400).json({
+            //             error: err
+            //         });
+            //     }
+            //     res.json({
+            //         message: 'Signup success! Please signin'
+            //     });
+            // });
+            newUser
+              .save()
+              .then((success) => {
+                return res.json({
+                  message: "Signup success! Please Sign In.",
+                });
+              })
+              .catch((err) => {
+                console.log("SAVE USER IN ACCOUNT ACTIVATION ERROR", err);
+                return res.status(401).json({
+                  error: "Error saving user in database. Try signup again",
+                });
+              });
+          }
+        );
+      } else {
+        return res.json({
+          message: "Something went wrong. Try again.",
+        });
+      }
+    };
+
+```
