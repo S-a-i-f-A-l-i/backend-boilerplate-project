@@ -161,3 +161,32 @@ exports.accountActivation = (req, res) => {
     });
   }
 };
+
+// signin user
+exports.signin = (req, res) => {
+  const { email, password } = req.body;
+  // checking user
+  User.findOne({ email: email })
+    .exec()
+    .then((user) => {
+      if (!user.authenticate(password)) {
+        return res.status(400).json({
+          error: "Email and Password do not match",
+        });
+      }
+      // generate a token
+      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "1d",
+      });
+      const { _id, name, email, role } = user;
+      return res.json({
+        token,
+        user: { _id, name, email, role },
+      });
+    })
+    .catch((err) => {
+      return res.status(400).json({
+        error: "User with that email does not exist. Please signup",
+      });
+    });
+};

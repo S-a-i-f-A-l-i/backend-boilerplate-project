@@ -450,3 +450,52 @@ controllers auth.js code
     };
 
 ```
+
+### user signin
+
+```
+routes
+auth.js
+  router.post("/signin", userSigninValidator, runValidation, signin);
+
+validators
+auth.js
+  exports.userSigninValidator = [
+    check("email").isEmail().withMessage("Must be a valid email address"),
+    check("password")
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters"),
+  ];
+
+controllers
+auth.js
+  // signin user
+  exports.signin = (req, res) => {
+    const { email, password } = req.body;
+    // checking user
+    User.findOne({ email: email })
+      .exec()
+      .then((user) => {
+        if (!user.authenticate(password)) {
+          return res.status(400).json({
+            error: "Email and Password do not match",
+          });
+        }
+        // generate a token
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: "1d",
+        });
+        const { _id, name, email, role } = user;
+        return res.json({
+          token,
+          user: { _id, name, email, role },
+        });
+      })
+      .catch((err) => {
+        return res.status(400).json({
+          error: "User with that email does not exist. Please signup",
+        });
+      });
+  };
+
+```
