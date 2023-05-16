@@ -499,3 +499,139 @@ auth.js
   };
 
 ```
+
+## Frontend work
+
+index.html
+
+```
+<head>
+...
+<link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+      integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+      crossorigin="anonymous"
+    />
+</head>
+```
+
+index.js
+
+```
+import React from "react";
+import ReactDOM from "react-dom/client";
+import AllRoutes from "./AllRoutes";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <AllRoutes />
+  </React.StrictMode>
+);
+
+```
+
+App.js
+
+```
+import Layout from "./core/Layout";
+function App() {
+  return (
+    <Layout>
+      <h1>Hello React</h1>
+    </Layout>
+  );
+}
+
+export default App;
+```
+
+AllRoutes.js
+
+```
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import App from "./App";
+import Signup from "./components/Signup";
+const AllRoutes = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" exact Component={App} />
+        <Route path="/signup" Component={Signup} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default AllRoutes;
+
+```
+
+core/Layout.js
+
+```
+import React, { Fragment } from "react";
+import Navbar from "../components/Navbar";
+
+const Layout = ({ children }) => {
+  return (
+    <Fragment>
+      <Navbar />
+      <div className="container">{children}</div>
+    </Fragment>
+  );
+};
+
+export default Layout;
+```
+
+component/Navbar.js
+
+```
+import React from "react";
+import { Link } from "react-router-dom";
+
+const Navbar = () => {
+  return (
+    <ul className="nav nav-tabs bg-primary">
+      <li className="nav-item">
+        <Link to="/" className="text-light nav-link">
+          Home
+        </Link>
+      </li>
+      <li className="nav-item">
+        <Link to="/signup" className="text-light nav-link">
+          Signup
+        </Link>
+      </li>
+    </ul>
+  );
+};
+
+export default Navbar;
+
+```
+
+component/Signup.js
+
+```
+import React, { useState } from "react";
+import { Link, redirect } from "react-router-dom";
+import Layout from "../core/Layout";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+
+const Signup = () => {
+  return (
+    <Layout>
+      <ToastContainer />
+      <h1>Signup</h1>
+    </Layout>
+  );
+};
+
+export default Signup;
+
+```
