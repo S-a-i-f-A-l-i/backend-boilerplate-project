@@ -638,6 +638,11 @@ export default Signup;
 
 ### Signup Component
 
+```
+axios package for API
+react-toastify - for showing response message (ex- Success, Error)
+```
+
 signup.js form created
 
 ```
@@ -717,4 +722,37 @@ const Signup = () => {
 
 export default Signup;
 
+```
+
+### Signup request sent
+
+```
+const handleSubmit = (e) => {
+    e.preventDefault();
+    setUser({ ...user, buttonText: "Submitting" });
+    axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_API}/signup`,
+      data: { name, email, password },
+    })
+      .then((res) => {
+        console.log("SIGNUP SUCCESS ", res);
+        setUser({
+          ...user,
+          name: "",
+          email: "",
+          password: "",
+          buttonText: "Submited",
+        });
+        toast.success(res.data.message);
+      })
+      .catch((err) => {
+        console.log("SIGNUP ERROR ", err.response.data);
+        setUser({
+          ...user,
+          buttonText: "Submit",
+        });
+        toast.error(err.response.data.error);
+      });
+  };
 ```

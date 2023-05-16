@@ -3,6 +3,7 @@ import { Link, redirect } from "react-router-dom";
 import Layout from "../core/Layout";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 const Signup = () => {
   const [user, setUser] = useState({
@@ -23,7 +24,31 @@ const Signup = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(user);
+    setUser({ ...user, buttonText: "Submitting" });
+    axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_API}/signup`,
+      data: { name, email, password },
+    })
+      .then((res) => {
+        console.log("SIGNUP SUCCESS ", res);
+        setUser({
+          ...user,
+          name: "",
+          email: "",
+          password: "",
+          buttonText: "Submited",
+        });
+        toast.success(res.data.message);
+      })
+      .catch((err) => {
+        console.log("SIGNUP ERROR ", err.response.data);
+        setUser({
+          ...user,
+          buttonText: "Submit",
+        });
+        toast.error(err.response.data.error);
+      });
   };
   return (
     <Layout>
