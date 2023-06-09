@@ -10,6 +10,11 @@ const Navbar = () => {
         </Link>
       </li>
       <li className="nav-item">
+        <Link to="/signin" className="text-light nav-link">
+          Signin
+        </Link>
+      </li>
+      <li className="nav-item">
         <Link to="/signup" className="text-light nav-link">
           Signup
         </Link>
