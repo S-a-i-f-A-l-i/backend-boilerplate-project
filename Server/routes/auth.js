@@ -12,7 +12,6 @@ const {
 const { runValidation } = require("../validators/index.js");
 
 router.post("/signup", userSignupValidator, runValidation, signup);
-router.post("/account-activation", accountActivation);
+router.post("/auth/activate", accountActivation);
 router.post("/signin", userSigninValidator, runValidation, signin);
-
 module.exports = router;

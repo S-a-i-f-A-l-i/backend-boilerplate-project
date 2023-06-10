@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import { Link, redirect } from "react-router-dom";
-import Layout from "../core/Layout";
+import Layout from "../../core/Layout";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-
-const Signup = () => {
+const Signin = () => {
   const [user, setUser] = useState({
-    name: "",
     email: "",
     password: "",
     buttonText: "Submit",
   });
-  const { name, email, password, buttonText } = user;
+  const { email, password, buttonText } = user;
   const handleChange = (e) => {
     // console.log(e.target.name, e.target.value);
     setUser((prev) => {
@@ -27,11 +25,11 @@ const Signup = () => {
     setUser({ ...user, buttonText: "Submitting" });
     axios({
       method: "POST",
-      url: `${process.env.REACT_APP_API}/signup`,
-      data: { name, email, password },
+      url: `${process.env.REACT_APP_API}/signin`,
+      data: { email, password },
     })
       .then((res) => {
-        console.log("SIGNUP SUCCESS ", res);
+        console.log("SIGNIN SUCCESS ", res);
         setUser({
           ...user,
           name: "",
@@ -39,10 +37,10 @@ const Signup = () => {
           password: "",
           buttonText: "Submitted",
         });
-        toast.success(res.data.message);
+        toast.success(`Hey ${res.data.user.name}, Welcome back!`);
       })
       .catch((err) => {
-        console.log("SIGNUP ERROR ", err.response.data);
+        console.log("SIGNIN ERROR ", err.response.data);
         setUser({
           ...user,
           buttonText: "Submit",
@@ -54,18 +52,8 @@ const Signup = () => {
     <Layout>
       <div className="col-md-6 offset-md-3">
         <ToastContainer />
-        <h1 className="p-5 text-center">Signup</h1>
+        <h1 className="p-5 text-center">Signin</h1>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="text-muted">Name</label>
-            <input
-              onChange={handleChange}
-              type="text"
-              name="name"
-              value={name}
-              className="form-control"
-            />
-          </div>
           <div className="form-group">
             <label className="text-muted">Email</label>
             <input
@@ -97,4 +85,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Signin;

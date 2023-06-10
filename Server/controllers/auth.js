@@ -33,11 +33,11 @@ exports.signup = (req, res) => {
     .exec()
     .then((user) => {
       // console.log("find One user ", user);
-      // if (user) {
-      //   return res.status(400).json({
-      //     error: "Email is already exist",
-      //   });
-      // }
+      if (user) {
+        return res.status(400).json({
+          error: "Email is already exist",
+        });
+      }
       const token = jwt.sign(
         { name, email, password },
         process.env.JWT_ACCOUNT_ACTIVATION,
@@ -114,7 +114,7 @@ exports.signup = (req, res) => {
 
 exports.accountActivation = (req, res) => {
   const { token } = req.body;
-  console.log(token);
+  // console.log("token", token);
   if (token) {
     jwt.verify(
       token,
