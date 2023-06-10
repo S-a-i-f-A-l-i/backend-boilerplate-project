@@ -1,23 +1,41 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   return (
     <ul className="nav nav-tabs bg-primary">
       <li className="nav-item">
-        <Link to="/" className="text-light nav-link">
+        <NavLink
+          to="/"
+          style={({ isActive }) =>
+            isActive ? { color: "#000" } : { color: "#fff" }
+          }
+          className="nav-link bg-primary"
+        >
           Home
-        </Link>
+        </NavLink>
       </li>
       <li className="nav-item">
-        <Link to="/signin" className="text-light nav-link">
+        <NavLink
+          to="/signin"
+          className="nav-link bg-primary"
+          style={({ isActive }) =>
+            isActive ? { color: "#000" } : { color: "#fff" }
+          }
+        >
           Signin
-        </Link>
+        </NavLink>
       </li>
       <li className="nav-item">
-        <Link to="/signup" className="text-light nav-link">
+        <NavLink
+          to="/signup"
+          className="nav-link bg-primary"
+          style={({ isActive }) =>
+            isActive ? { color: "#000" } : { color: "#fff" }
+          }
+        >
           Signup
-        </Link>
+        </NavLink>
       </li>
     </ul>
   );
