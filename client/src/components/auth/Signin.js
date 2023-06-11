@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Layout from "../../core/Layout";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -11,6 +11,7 @@ const Signin = () => {
     password: "",
     buttonText: "Submit",
   });
+  const navigate = useNavigate();
   const { email, password, buttonText } = user;
   const handleChange = (e) => {
     // console.log(e.target.name, e.target.value);
@@ -40,6 +41,13 @@ const Signin = () => {
             buttonText: "Submitted",
           });
           toast.success(`Hey ${res.data.user.name}, Welcome back!`);
+          isAuth() && isAuth().role === "admin"
+            ? // ? setTimeout(() => {
+              navigate("/admin")
+            : // }, 2000)
+              // : setTimeout(() => {
+              navigate("/private");
+          // }, 1000);
         });
       })
       .catch((err) => {
@@ -55,7 +63,11 @@ const Signin = () => {
     <Layout>
       <div className="col-md-6 offset-md-3">
         <ToastContainer />
-        {isAuth() && <Navigate to="/" />}
+        {isAuth() && isAuth().role === "admin" ? (
+          <Navigate to="/admin" />
+        ) : (
+          isAuth() && <Navigate to="/private" />
+        )}
         <h1 className="p-5 text-center">Signin</h1>
         <form onSubmit={handleSubmit}>
           <div className="form-group">

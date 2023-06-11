@@ -1170,3 +1170,45 @@ AllRoutes.js
     }
   />
 ```
+
+### after login redirect
+
+```
+Signin.js
+  in success response
+      isAuth() && isAuth().role === "admin"
+      ? // ? setTimeout(() => {
+        navigate("/admin")
+      : // }, 2000)
+        // : setTimeout(() => {
+        navigate("/private");
+    // }, 1000);
+
+Navbar.js
+  {isAuth() && isAuth().role === "admin" && (
+    <li className="nav-item">
+      <NavLink
+        to="/admin"
+        className="nav-link bg-primary"
+        style={({ isActive }) =>
+          isActive ? { color: "#000" } : { color: "#fff" }
+        }
+      >
+        {isAuth().name}
+      </NavLink>
+    </li>
+  )}
+  {isAuth() && isAuth().role === "subscriber" && (
+    <li className="nav-item">
+      <NavLink
+        to="/private"
+        className="nav-link bg-primary"
+        style={({ isActive }) =>
+          isActive ? { color: "#000" } : { color: "#fff" }
+        }
+      >
+        {isAuth().name}
+      </NavLink>
+    </li>
+  )}
+```
