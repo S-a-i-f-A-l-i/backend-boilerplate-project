@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link, redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Layout from "../../core/Layout";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { authenticate, isAuth } from "./helpers";
 const Signin = () => {
   const [user, setUser] = useState({
     email: "",
@@ -30,14 +31,16 @@ const Signin = () => {
     })
       .then((res) => {
         console.log("SIGNIN SUCCESS ", res);
-        setUser({
-          ...user,
-          name: "",
-          email: "",
-          password: "",
-          buttonText: "Submitted",
+        authenticate(res, () => {
+          setUser({
+            ...user,
+            name: "",
+            email: "",
+            password: "",
+            buttonText: "Submitted",
+          });
+          toast.success(`Hey ${res.data.user.name}, Welcome back!`);
         });
-        toast.success(`Hey ${res.data.user.name}, Welcome back!`);
       })
       .catch((err) => {
         console.log("SIGNIN ERROR ", err.response.data);
@@ -52,6 +55,7 @@ const Signin = () => {
     <Layout>
       <div className="col-md-6 offset-md-3">
         <ToastContainer />
+        {isAuth() && <Navigate to="/" />}
         <h1 className="p-5 text-center">Signin</h1>
         <form onSubmit={handleSubmit}>
           <div className="form-group">

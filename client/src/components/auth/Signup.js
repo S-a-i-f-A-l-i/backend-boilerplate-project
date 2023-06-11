@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link, redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Layout from "../../core/Layout";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { isAuth } from "./helpers";
 
 const Signup = () => {
   const [user, setUser] = useState({
@@ -54,6 +55,7 @@ const Signup = () => {
     <Layout>
       <div className="col-md-6 offset-md-3">
         <ToastContainer />
+        {isAuth() && <Navigate to="/" />}
         <h1 className="p-5 text-center">Signup</h1>
         <form onSubmit={handleSubmit}>
           <div className="form-group">

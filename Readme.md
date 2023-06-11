@@ -932,3 +932,187 @@ const handleSubmit = (e) => {
   export default AccountActivate;
 
 ```
+
+### Navbar.js
+
+```
+    import React from "react";
+    import { NavLink } from "react-router-dom";
+
+    const Navbar = () => {
+      return (
+        <ul className="nav nav-tabs bg-primary">
+          <li className="nav-item">
+            <NavLink
+              to="/"
+              style={({ isActive }) =>
+                isActive ? { color: "#000" } : { color: "#fff" }
+              }
+              className="nav-link bg-primary"
+            >
+              Home
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink
+              to="/signin"
+              className="nav-link bg-primary"
+              style={({ isActive }) =>
+                isActive ? { color: "#000" } : { color: "#fff" }
+              }
+            >
+              Signin
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink
+              to="/signup"
+              className="nav-link bg-primary"
+              style={({ isActive }) =>
+                isActive ? { color: "#000" } : { color: "#fff" }
+              }
+            >
+              Signup
+            </NavLink>
+          </li>
+        </ul>
+      );
+    };
+
+    export default Navbar;
+
+```
+
+```
+npm install js-cookie
+import cookie from "js-cookie";
+```
+
+### Auth Helper
+
+```
+  helper.js
+    import cookie from "js-cookie";
+
+    // set Cookie
+    export const setCookie = (key, value) => {
+      if (window !== undefined) {
+        cookie.set(key, value, {
+          expires: 1,
+        });
+      }
+    };
+    // remove cookie
+    export const removeCookie = (key) => {
+      if (window !== undefined) {
+        cookie.remove(key);
+      }
+    };
+    // get cookie
+    export const getCookie = (key) => {
+      if (window !== undefined) {
+        return cookie.get(key);
+      }
+    };
+
+    // set localStorage
+    export const setLocalStorage = (key, value) => {
+      if (window !== undefined) {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+    };
+
+    // remove localStorage
+    export const removeLocalStorage = (key) => {
+      if (window !== undefined) {
+        localStorage.removeItem(key);
+      }
+    };
+
+    export const authenticate = (response, next) => {
+      console.log("AUTHENTICATION HELPER ON SIGNING RESPONSE", response);
+      setCookie("token", response.data.token);
+      setLocalStorage("user", response.data.user);
+      next();
+    };
+
+    export const isAuth = () => {
+      if (window !== undefined) {
+        const cookieChecked = getCookie("token");
+        if (cookieChecked) {
+          if (localStorage.getItem("user")) {
+            return JSON.parse(localStorage.getItem("user"));
+          } else {
+            return false;
+          }
+        }
+      }
+    };
+
+```
+
+### Signout
+
+```
+Navbar.js
+  import { NavLink, useNavigate } from "react-router-dom";
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    `1`;
+    signout(() => {
+      navigate("/");
+    });
+  };
+  {!isAuth() && (
+        <>
+          <li className="nav-item">
+            <NavLink
+              to="/signin"
+              className="nav-link bg-primary"
+              style={({ isActive }) =>
+                isActive ? { color: "#000" } : { color: "#fff" }
+              }
+            >
+              Signin
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink
+              to="/signup"
+              className="nav-link bg-primary"
+              style={({ isActive }) =>
+                isActive ? { color: "#000" } : { color: "#fff" }
+              }
+            >
+              Signup
+            </NavLink>
+          </li>
+        </>
+      )}
+      {isAuth() && (
+        <li>
+          <span className="nav-link">{isAuth().name}</span>
+        </li>
+      )}
+      {isAuth() && (
+        <li>
+          <span
+            className="nav-link"
+            style={{
+              cursor: "pointer",
+              color: "white",
+            }}
+            onClick={handleLogout}
+          >
+            Signout
+          </span>
+        </li>
+      )}
+Signup.js
+  import { Navigate } from "react-router-dom";
+  {isAuth() && <Navigate to="/" />}
+
+Singin.js
+  import { Navigate } from "react-router-dom";
+  {isAuth() && <Navigate to="/" />}
+```
