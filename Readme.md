@@ -1116,3 +1116,27 @@ Singin.js
   import { Navigate } from "react-router-dom";
   {isAuth() && <Navigate to="/" />}
 ```
+
+### PrivateRouter created
+
+```
+PrivateRouter.js
+  import React from "react";
+  import { isAuth } from "./helpers";
+  import { Navigate } from "react-router-dom";
+  import Layout from "../../core/Layout";
+
+  const PrivateRoute = ({ children }) => {
+    if (!isAuth()) {
+      return <Navigate to="/signin" />;
+    }
+    return children;
+  };
+
+  export default PrivateRoute;
+
+AllRoutes.js
+  import PrivateRoute from "./components/auth/PrivateRoute";
+  <Route path="/private" element={<PrivateRoute><Private /></PrivateRoute>} />
+
+```
