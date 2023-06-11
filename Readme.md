@@ -1140,3 +1140,33 @@ AllRoutes.js
   <Route path="/private" element={<PrivateRoute><Private /></PrivateRoute>} />
 
 ```
+
+### admin route
+
+```
+AdminRoute.js
+  import React from "react";
+  import { Navigate } from "react-router-dom";
+  import { isAuth } from "./helpers";
+
+  const AdminRoute = ({ children }) => {
+    if (isAuth() && isAuth().role !== "admin") {
+      return <Navigate to="/" />;
+    }
+    return children;
+  };
+
+  export default AdminRoute;
+AllRoutes.js
+  import AdminRoute from "./components/auth/AdminRoute";
+  <Route
+    path="/admin"
+    element={
+      <PrivateRoute>
+        <AdminRoute>
+          <Admin />
+        </AdminRoute>
+      </PrivateRoute>
+    }
+  />
+```

@@ -4,9 +4,11 @@ import App from "./App";
 import Signup from "./components/auth/Signup";
 import Signin from "./components/auth/Signin";
 import AccountActivate from "./components/auth/AccountActivate";
-import Private from "./core/Provate";
+import Private from "./core/Private";
+import Admin from "./core/Admin";
 import PrivateRoute from "./components/auth/PrivateRoute";
-PrivateRoute;
+import AdminRoute from "./components/auth/AdminRoute";
+
 const AllRoutes = () => {
   return (
     <BrowserRouter>
@@ -20,6 +22,16 @@ const AllRoutes = () => {
           element={
             <PrivateRoute>
               <Private />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute>
+              <AdminRoute>
+                <Admin />
+              </AdminRoute>
             </PrivateRoute>
           }
         />
