@@ -1259,3 +1259,17 @@ server.js
   app.use("/api", userRoutes);
 
 ```
+
+### Get user Route Protected
+
+```
+middleware/auth.js
+  const { expressjwt: expressJwt } = require("express-jwt");
+
+  exports.requireSignin = expressJwt({
+    secret: process.env.JWT_SECRET,
+    algorithms: ["HS256"],
+  });
+routes/user.js
+  router.get("/user/:id", requireSignin, read);
+```
