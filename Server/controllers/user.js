@@ -25,6 +25,7 @@ exports.read = async (req, res) => {
   }
 };
 exports.update = async (req, res) => {
+  console.log("UPDATED REQUEST");
   const userId = req.params.id;
   // console.log("USER ID", userId);
   // console.log("UPDATED USER", req.user, "BODY", req.body);

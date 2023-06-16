@@ -1263,7 +1263,7 @@ server.js
 ### Get user Route Protected
 
 ```
-middleware/auth.js
+middleware/user.js
   const { expressjwt: expressJwt } = require("express-jwt");
 
   exports.requireSignin = expressJwt({
@@ -1272,4 +1272,81 @@ middleware/auth.js
   });
 routes/user.js
   router.get("/user/:id", requireSignin, read);
+```
+
+### Update user
+
+```
+routers / auth.js
+  router.patch("/user/update/:id", requireSignin, update);
+
+controllers/user.js
+
+exports.update = async (req, res) => {
+  const userId = req.params.id;
+  // console.log("USER ID", userId);
+  // console.log("UPDATED USER", req.user, "BODY", req.body);
+
+  const { name, password } = req.body;
+  if (!userId) {
+    return res.status(400).json({ error: "Please send user Id" });
+  }
+  try {
+    let user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found",
+      });
+    }
+
+    if (!name) return res.status(400).json({ error: "Name is required" });
+    if (password) {
+      if (password.length < 6) {
+        return res
+          .status(400)
+          .json({ error: "Password should be min 6 characters long" });
+      } else {
+        user.password = password;
+      }
+    }
+    user.name = name;
+    await user.save();
+
+    // console.log(user);
+    user.salt = undefined;
+    user.hashed_password = undefined;
+    res.status(200).json(user);
+  } catch (error) {
+    return res.json({ error: error });
+  }
+};
+
+
+```
+
+### update admin route
+
+```
+routers/user.js
+  router.patch("/admin/update/:id", requireSignin, adminMiddleware, update);
+middleware/user.js
+  const User = require("../models/user.js");
+  // admin middleware
+  exports.adminMiddleware = async (req, res, next) => {
+    // console.log("ADMIN MIDDLEWARE", req);
+    const user = await User.findById({ _id: req.auth._id });
+    if (!user)
+      return res.status(404).json({
+        error: "User not found",
+      });
+    // console.log("USER MIDDLEWARE", user);
+    if (user.role !== "admin") {
+      return res.status(401).json({
+        error: "Admin resource. Access denied.",
+      });
+    }
+    req.profile = user;
+    next();
+  };
+
 ```
