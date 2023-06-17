@@ -25,11 +25,8 @@ exports.read = async (req, res) => {
   }
 };
 exports.update = async (req, res) => {
-  console.log("UPDATED REQUEST");
+  // console.log("UPDATED REQUEST");
   const userId = req.params.id;
-  // console.log("USER ID", userId);
-  // console.log("UPDATED USER", req.user, "BODY", req.body);
-
   const { name, password } = req.body;
   if (!userId) {
     return res.status(400).json({ error: "Please send user Id" });
@@ -41,7 +38,6 @@ exports.update = async (req, res) => {
         error: "User not found",
       });
     }
-
     if (!name) return res.status(400).json({ error: "Name is required" });
     if (password) {
       if (password.length < 6) {
@@ -52,10 +48,9 @@ exports.update = async (req, res) => {
         user.password = password;
       }
     }
+    console.log(user);
     user.name = name;
     await user.save();
-
-    // console.log(user);
     user.salt = undefined;
     user.hashed_password = undefined;
     res.status(200).json(user);
